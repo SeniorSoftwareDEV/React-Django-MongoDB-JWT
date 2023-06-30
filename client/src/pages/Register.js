@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -17,16 +18,37 @@ const Register = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle signup logic here
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
+    let bodyFormData = new FormData();
+    bodyFormData.append('name', name);
+    bodyFormData.append('email', email);
+    bodyFormData.append('password', password);
+    await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_API_URL}/auth/singup`,
+        data: bodyFormData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        .then((res) => {
+            console.log('dddddddddddddddddd');
+            if (res.status === 200 && res.data.token) {
+                console.log('Signin Successed!');
+                // localStorage.setItem('token', res.data.token);
+                // localStorage.setItem('userData', JSON.stringify(res.data.data));
+            }
+            else {
+                console.log(res.data.message);
+            }
+        })
+        .catch((err) => {
+            // window.location.href = '/'
+            console.log(err);
+    });
     // Reset the form
-    setName('');
-    setEmail('');
-    setPassword('');
+    // setName('');
+    // setEmail('');
+    // setPassword('');
   };
 
   return (
