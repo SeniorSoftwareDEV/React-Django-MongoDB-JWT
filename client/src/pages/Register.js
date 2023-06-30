@@ -26,29 +26,30 @@ const Register = () => {
     bodyFormData.append('password', password);
     await axios({
         method: 'post',
-        url: `${process.env.REACT_APP_API_URL}/auth/singup`,
+        url: `${process.env.REACT_APP_API_URL}/signup`,
         data: bodyFormData,
         headers: { 'Content-Type': 'multipart/form-data' }
         })
         .then((res) => {
-            console.log('dddddddddddddddddd');
-            if (res.status === 200 && res.data.token) {
-                console.log('Signin Successed!');
+            if (res.status === 200) {
+                console.log("ddddddddd", res.data)
+                if(res.data === 'success') {
+                  console.log('Signin Successed!');
+                  window.location.href = '/'
+                }
+                else {
+                  console.log('User already exist.');
+                }
                 // localStorage.setItem('token', res.data.token);
                 // localStorage.setItem('userData', JSON.stringify(res.data.data));
             }
             else {
-                console.log(res.data.message);
+                console.log('database connection error');
             }
         })
         .catch((err) => {
-            // window.location.href = '/'
             console.log(err);
     });
-    // Reset the form
-    // setName('');
-    // setEmail('');
-    // setPassword('');
   };
 
   return (
